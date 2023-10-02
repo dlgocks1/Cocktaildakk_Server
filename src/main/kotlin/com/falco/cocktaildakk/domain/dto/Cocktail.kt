@@ -12,8 +12,8 @@ data class Cocktail(
     val englishName: String,
     @Column(name = "korean_name")
     val koreanName: String,
-    @Column(name = "alcohol_content")
-    val alcoholContent: Int,
+    @Column(name = "alcohol_level")
+    val alcoholLevel: Int,
     @Column(name = "base_liquor")
     val baseLiquor: String,
     @Column(name = "mixing_method")
