@@ -22,7 +22,6 @@ class CocktailController(
     ): CommonResponse<Cocktail> {
         return try {
             val cocktail = cocktailService.getCocktailById(id)
-            logger.info(cocktail.toString())
             CommonResponse.onSuccess(cocktail)
         } catch (e: NoContentException) {
             CommonResponse.onFailure(
