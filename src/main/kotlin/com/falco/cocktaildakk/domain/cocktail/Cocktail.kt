@@ -1,4 +1,4 @@
-package com.falco.cocktaildakk.domain.dto
+package com.falco.cocktaildakk.domain.cocktail
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity

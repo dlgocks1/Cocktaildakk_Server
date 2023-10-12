@@ -1,6 +1,6 @@
 package com.falco.cocktaildakk
 
-import com.falco.cocktaildakk.domain.dto.AccessToken
+import com.falco.cocktaildakk.domain.token.AccessToken
 import com.falco.cocktaildakk.repository.AccessTokenRepository
 import com.falco.cocktaildakk.repository.RefreshTokenRepository
 import io.jsonwebtoken.Jwts

@@ -1,6 +1,6 @@
 package com.falco.cocktaildakk.config
 
-import com.falco.cocktaildakk.config.properties.JpaProproperty
+import com.falco.cocktaildakk.config.properties.JpaProperty
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import org.springframework.context.annotation.Bean
@@ -11,14 +11,14 @@ import javax.sql.DataSource
 
 @Configuration
 class JpaConfiguration(
-    private val jpaProproperty: JpaProproperty
+    private val jpaProperty: JpaProperty
 ) {
     @Bean
     fun dataSource(): DataSource {
         val config = HikariConfig()
-        config.jdbcUrl = jpaProproperty.url
-        config.username = jpaProproperty.username
-        config.password = jpaProproperty.password
+        config.jdbcUrl = jpaProperty.url
+        config.username = jpaProperty.username
+        config.password = jpaProperty.password
         config.driverClassName = "com.mysql.cj.jdbc.Driver" // Set your driver class name
         return HikariDataSource(config)
     }

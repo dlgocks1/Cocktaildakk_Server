@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component
 
 @Component
 @PropertySource("classpath:config.properties")
-data class JpaProproperty(
+data class JpaProperty(
     @Value("\${url}")
     var url: String = "",
     @Value("\${username}")

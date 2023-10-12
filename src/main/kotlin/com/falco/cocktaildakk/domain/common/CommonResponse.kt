@@ -1,4 +1,4 @@
-package com.falco.cocktaildakk.domain.response
+package com.falco.cocktaildakk.domain.common
 
 
 data class CommonResponse<out T>(

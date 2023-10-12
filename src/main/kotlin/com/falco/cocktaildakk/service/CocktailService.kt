@@ -1,6 +1,6 @@
 package com.falco.cocktaildakk.service
 
-import com.falco.cocktaildakk.domain.dto.Cocktail
+import com.falco.cocktaildakk.domain.cocktail.Cocktail
 import com.falco.cocktaildakk.exceptions.NoContentException
 import com.falco.cocktaildakk.repository.CocktailRepository
 import com.falco.cocktaildakk.util.Contants.ERROR
