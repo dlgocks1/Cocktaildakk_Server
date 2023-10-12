@@ -17,44 +17,33 @@ class AuthService(
 ) {
 
     fun register(loginType: LoginType, socialAccessToken: String): AccessTokenAndRefreshToken {
-        when (loginType) {
-            LoginType.KAKAO -> {
-                // 카카오 유저 정보 취득
-                val userId = socialLoginService.getKakaoUserInfo(socialAccessToken).id
-                // 기존 소셜 회원가입 여부 파악 (크로스 체크)
-                if (!isRegistered(userId)) {
-                    return jwtService.register(userId)
-                } else {
-                    throw BaseException(CommonErrorCode.USER_ALREADY_EXISTS)
-                }
-            }
-
+        val userId = when (loginType) {
+            LoginType.KAKAO -> socialLoginService.getKakaoUserInfo(socialAccessToken).id
             LoginType.NAVER -> throw IllegalStateException("naver login is not provided")
+        }
+
+        // 기존 소셜 회원가입 여부 파악 (크로스 체크)
+        if (isRegistered(userId)) {
+            throw BaseException(CommonErrorCode.USER_ALREADY_EXISTS)
+        } else {
+            return jwtService.generateToken(userId)
         }
     }
 
-    fun kakaoLogin(accessToken: String) {
-        val kakaoUserInfo = socialLoginService.getKakaoUserInfo(accessToken)
-
-//        if (isRegistered(kakaoUserInfo.id)) {
-//            return jwtService.let { tokenUtil ->
-//                AccessTokenAndRefreshToken(
-//                    accessToken = tokenUtil.generateToken(id = userInfo.id, tokenType = TokenType.ACCESS).also {
-//                        accessTokenRepository.save(it as AccessToken)
-//                    },
-//                    refreshToken = tokenUtil.generateToken(id = userInfo.id, tokenType = TokenType.REFRESH)
-//                        .also {
-//                            refreshTokenRepository.save(it as RefreshToken)
-//                        }
-//                )
-//            }
-//        } else {
-//            throw BaseException(CommonErrorCode.USER_ALREADY_EXISTS)
-//        }
+    fun kakaoLogin(accessToken: String): AccessTokenAndRefreshToken {
+        val userId = socialLoginService.getKakaoUserInfo(accessToken).id
+        return if (isRegistered(userId)) {
+            if (validateAccessToken(userId)) {
+                jwtService.updateToken(userId)
+            } else {
+                jwtService.generateToken(userId)
+            }
+        } else {
+            throw BaseException(CommonErrorCode.NOT_EXIST_USER)
+        }
     }
 
-    fun tokenLogin(accessToken: String) {
-    }
+    private fun validateAccessToken(userId: String): Boolean = jwtService.validateAccessToken(userId)
 
     private fun isRegistered(userId: String) = userRepository.findByIdOrNull(userId) == null
 

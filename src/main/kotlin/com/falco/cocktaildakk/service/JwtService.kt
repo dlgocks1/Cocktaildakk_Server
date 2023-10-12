@@ -1,11 +1,13 @@
 package com.falco.cocktaildakk.service
 
 import com.falco.cocktaildakk.config.properties.JwtProperty
+import com.falco.cocktaildakk.domain.common.CommonErrorCode
 import com.falco.cocktaildakk.domain.token.AccessToken
 import com.falco.cocktaildakk.domain.token.RefreshToken
 import com.falco.cocktaildakk.domain.token.Token
 import com.falco.cocktaildakk.domain.token.TokenType
 import com.falco.cocktaildakk.domain.token.response.AccessTokenAndRefreshToken
+import com.falco.cocktaildakk.exceptions.BaseException
 import com.falco.cocktaildakk.repository.AccessTokenRepository
 import com.falco.cocktaildakk.repository.RefreshTokenRepository
 import com.falco.cocktaildakk.repository.UserRepository
@@ -29,19 +31,35 @@ class JwtService(
     private val refreshTokenRepository: RefreshTokenRepository
 ) {
 
-    fun register(userId: String): AccessTokenAndRefreshToken =
+    fun updateToken(userId: String): AccessTokenAndRefreshToken {
+        val updatedAccessToken =
+            (accessTokenRepository.findByIdOrNull(userId) ?: throw BaseException(CommonErrorCode.NOT_EXIST_USER)).copy(
+                expiration = Date(System.currentTimeMillis() + jwtProperty.refreshtoken.expiration)
+            )
+        val updatedRefreshToken =
+            (refreshTokenRepository.findByIdOrNull(userId) ?: throw BaseException(CommonErrorCode.NOT_EXIST_USER)).copy(
+                expiration = Date(System.currentTimeMillis() + jwtProperty.accesstoken.expiration)
+            )
+
+        return AccessTokenAndRefreshToken(
+            accessToken = accessTokenRepository.save(updatedAccessToken),
+            refreshToken = refreshTokenRepository.save(updatedRefreshToken)
+        )
+    }
+
+    fun generateToken(userId: String): AccessTokenAndRefreshToken =
         AccessTokenAndRefreshToken(
-            accessToken = generateToken(id = userId, tokenType = TokenType.ACCESS)
+            accessToken = generateToken(userId = userId, tokenType = TokenType.ACCESS)
                 .also {
                     accessTokenRepository.save(it as AccessToken)
                 },
-            refreshToken = generateToken(id = userId, tokenType = TokenType.REFRESH)
+            refreshToken = generateToken(userId = userId, tokenType = TokenType.REFRESH)
                 .also {
                     refreshTokenRepository.save(it as RefreshToken)
                 }
         )
 
-    fun generateToken(id: String, tokenType: TokenType): Token {
+    fun generateToken(userId: String, tokenType: TokenType): Token {
         val (expiration, secret) = when (tokenType) {
             TokenType.ACCESS -> jwtProperty.accesstoken.expiration to jwtProperty.accesstoken.secret
             TokenType.REFRESH -> jwtProperty.refreshtoken.expiration to jwtProperty.refreshtoken.secret
@@ -49,16 +67,16 @@ class JwtService(
         val expirationDate = Date(System.currentTimeMillis() + expiration)
         return tokenType.generate(
             token = Jwts.builder()
-                .setSubject(id)
+                .setSubject(userId)
                 .setExpiration(expirationDate)
                 .signWith(Keys.hmacShaKeyFor(secret.toByteArray()), SignatureAlgorithm.HS512)
                 .compact(),
             expiration = expirationDate,
-            userId = id
+            userId = userId
         )
     }
 
-    fun validateToken(servletRequest: ServletRequest, token: String?): Boolean {
+    fun validateAcessTokenFromRequest(servletRequest: ServletRequest, token: String?): Boolean {
         try {
             val claims =
                 Jwts.parserBuilder().setSigningKey(jwtProperty.accesstoken.secret.toByteArray()).build()
@@ -82,6 +100,16 @@ class JwtService(
             logger.info("JWT 토큰이 잘못되었습니다.")
         }
         return false
+    }
+
+    fun validateAccessToken(userId: String): Boolean {
+        val accessToken = accessTokenRepository.findByIdOrNull(userId) ?: return false
+        return !(accessToken.expiration.before(Date()))
+    }
+
+    fun validateRefreshToken(userId: String): Boolean {
+        val refreshToken = refreshTokenRepository.findByIdOrNull(userId) ?: return false
+        return !(refreshToken.expiration.before(Date()))
     }
 
     fun getAuthentication(token: String?): Authentication {

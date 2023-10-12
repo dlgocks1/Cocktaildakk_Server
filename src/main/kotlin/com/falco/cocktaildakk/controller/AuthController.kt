@@ -17,10 +17,11 @@ class AuthController(
     @ResponseBody
     @GetMapping("/kakao")
     fun kakaoCallback(@RequestParam code: String): CommonResponse<AccessTokenAndRefreshToken> {
+        // -- 클라이언트 진행 영역 --
         println("Id Token : $code")
         val accessToken = socialLoginService.getKakaoAccessToken(code)!!.accessToken
         println("Kakao AccessToken : " + accessToken)
-        // -- 클라이언트 진행 --
+        // -- 클라이언트 진행 영역 --
 
         return CommonResponse.onSuccess(
             authService.register(
@@ -33,12 +34,12 @@ class AuthController(
     @PostMapping("/kakao-login")
     fun login(
         @RequestBody accessToken: AccessTokenRequest
-    ) {
-//        return CommonResponse.onSuccess(authService.kakaoLogin(accessToken.accessToken))
+    ): CommonResponse<AccessTokenAndRefreshToken> {
+        return CommonResponse.onSuccess(authService.kakaoLogin(accessToken.accessToken))
     }
 
-    @PostMapping("/token-login")
-    fun loginWithJwt(
+    @PostMapping("/auto-login")
+    fun autoLogin(
         @RequestBody accessToken: AccessTokenRequest
     ) {
 //        return CommonResponse.onSuccess(authService.tokenLogin(accessToken.accessToken))

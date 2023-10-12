@@ -21,7 +21,7 @@ class JwtFilter(
         val httpServletRequest = servletRequest as HttpServletRequest
         val jwt = getJwt()
         val requestURI = httpServletRequest.requestURI
-        if (StringUtils.hasText(jwt) && jwtService.validateToken(servletRequest, jwt)) {
+        if (StringUtils.hasText(jwt) && jwtService.validateAcessTokenFromRequest(servletRequest, jwt)) {
             val authentication = jwtService.getAuthentication(jwt)
             SecurityContextHolder.getContext().authentication = authentication
             JwtFilter.logger.info("Security Context에 '${authentication.name}' 인증 정보를 저장했습니다, uri: $requestURI")
