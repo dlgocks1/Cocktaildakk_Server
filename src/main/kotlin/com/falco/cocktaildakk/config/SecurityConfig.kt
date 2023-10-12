@@ -9,8 +9,8 @@ import org.springframework.boot.autoconfigure.security.ConditionalOnDefaultWebSe
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
-import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer
 import org.springframework.security.config.annotation.web.configurers.SessionManagementConfigurer
 import org.springframework.security.config.http.SessionCreationPolicy
@@ -34,18 +34,22 @@ class SecurityConfig(
         return BCryptPasswordEncoder()
     }
 
-    fun configure(web: WebSecurity) {
-        web.ignoring()
-            .requestMatchers(
-                "/h2-console/**",
-                "/favicon.ico",
-                "/swagger-ui/**",
-                "/swagger-resources/**",
-                "/api-docs/**",
-                "/v3/api-docs/**",
-                "/users/**", // TODO : 인가처리시 제외하기
-                "/health/**"
-            )
+    @Bean
+    fun webSecurityCustomizer(): WebSecurityCustomizer {
+        return WebSecurityCustomizer { web ->
+            web.ignoring()
+                .requestMatchers(
+                    "/h2-console/**",
+                    "/favicon.ico",
+                    "/swagger-ui/**",
+                    "/swagger-resources/**",
+                    "/api-docs/**",
+                    "/v3/api-docs/**",
+                    "/auth/**",
+                    "/users/**", // TODO : 인가처리시 제외하기
+                    "/health/**"
+                )
+        }
     }
 
     @Bean
@@ -67,18 +71,16 @@ class SecurityConfig(
             }
             .authorizeHttpRequests { authorizeRequests ->
                 authorizeRequests
-                    .requestMatchers("/webjars/**").permitAll()
-                    .requestMatchers("/webjars/**").permitAll()
-                    .requestMatchers("/image/**").permitAll()
-                    .requestMatchers("/users/refresh").permitAll()
+                    .requestMatchers("/webjars/**", "/image/**", "/users/refresh").permitAll()
                     .requestMatchers("/profile").permitAll()
                     .requestMatchers("/login/**").permitAll()
+                    .requestMatchers("/kakao").permitAll() // 카카오 콜백 테스트용
                     .requestMatchers("/test/**").permitAll()
                     .requestMatchers("/auth/**").permitAll()
                     .requestMatchers("/admin/**").hasAnyRole("ADMIN")
-                    .anyRequest().authenticated()
+                    .anyRequest()
+                    .authenticated()
             }.apply(JwtSecurityConfig(jwtService))
         return http.build()
     }
-
 }

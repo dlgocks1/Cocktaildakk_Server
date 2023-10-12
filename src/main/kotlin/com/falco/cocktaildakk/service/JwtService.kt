@@ -31,39 +31,21 @@ class JwtService(
     private val refreshTokenRepository: RefreshTokenRepository
 ) {
 
-    fun updateToken(userId: String): AccessTokenAndRefreshToken {
-        val updatedAccessToken =
-            (accessTokenRepository.findByIdOrNull(userId) ?: throw BaseException(CommonErrorCode.NOT_EXIST_USER)).copy(
-                expiration = Date(System.currentTimeMillis() + jwtProperty.refreshtoken.expiration)
-            )
-        val updatedRefreshToken =
-            (refreshTokenRepository.findByIdOrNull(userId) ?: throw BaseException(CommonErrorCode.NOT_EXIST_USER)).copy(
-                expiration = Date(System.currentTimeMillis() + jwtProperty.accesstoken.expiration)
-            )
-
-        return AccessTokenAndRefreshToken(
-            accessToken = accessTokenRepository.save(updatedAccessToken),
-            refreshToken = refreshTokenRepository.save(updatedRefreshToken)
-        )
-    }
-
-    fun generateToken(userId: String): AccessTokenAndRefreshToken =
+    // 업데이트도 동시에 됨 (키가 동일하기에)
+    fun generateTokenByUserId(userId: String): AccessTokenAndRefreshToken =
         AccessTokenAndRefreshToken(
-            accessToken = generateToken(userId = userId, tokenType = TokenType.ACCESS)
+            accessToken = generateTokenByUserId(userId = userId, tokenType = TokenType.ACCESS)
                 .also {
                     accessTokenRepository.save(it as AccessToken)
-                },
-            refreshToken = generateToken(userId = userId, tokenType = TokenType.REFRESH)
+                }.token,
+            refreshToken = generateTokenByUserId(userId = userId, tokenType = TokenType.REFRESH)
                 .also {
                     refreshTokenRepository.save(it as RefreshToken)
-                }
+                }.token
         )
 
-    fun generateToken(userId: String, tokenType: TokenType): Token {
-        val (expiration, secret) = when (tokenType) {
-            TokenType.ACCESS -> jwtProperty.accesstoken.expiration to jwtProperty.accesstoken.secret
-            TokenType.REFRESH -> jwtProperty.refreshtoken.expiration to jwtProperty.refreshtoken.secret
-        }
+    fun generateTokenByUserId(userId: String, tokenType: TokenType): Token {
+        val (expiration, secret) = getExpirationAndSecret(tokenType)
         val expirationDate = Date(System.currentTimeMillis() + expiration)
         return tokenType.generate(
             token = Jwts.builder()
@@ -76,12 +58,12 @@ class JwtService(
         )
     }
 
+
     fun validateAcessTokenFromRequest(servletRequest: ServletRequest, token: String?): Boolean {
         try {
-            val claims =
-                Jwts.parserBuilder().setSigningKey(jwtProperty.accesstoken.secret.toByteArray()).build()
-                    .parseClaimsJws(token).body
-            val expirationDate: Date = claims.expiration
+            val claims = Jwts.parserBuilder().setSigningKey(jwtProperty.accesstoken.secret.toByteArray()).build()
+                .parseClaimsJws(token).body
+            val expirationDate = claims.expiration
             !expirationDate.before(Date())
         } catch (e: SecurityException) {
             servletRequest.setAttribute("exception", "MalformedJwtException")
@@ -102,14 +84,21 @@ class JwtService(
         return false
     }
 
-    fun validateAccessToken(userId: String): Boolean {
-        val accessToken = accessTokenRepository.findByIdOrNull(userId) ?: return false
-        return !(accessToken.expiration.before(Date()))
+    private fun getExpirationAndSecret(tokenType: TokenType) = when (tokenType) {
+        TokenType.ACCESS -> jwtProperty.accesstoken.expiration to jwtProperty.accesstoken.secret
+        TokenType.REFRESH -> jwtProperty.refreshtoken.expiration to jwtProperty.refreshtoken.secret
     }
 
-    fun validateRefreshToken(userId: String): Boolean {
-        val refreshToken = refreshTokenRepository.findByIdOrNull(userId) ?: return false
-        return !(refreshToken.expiration.before(Date()))
+    fun validateToken(token: String, tokenType: TokenType) {
+        val expiration = getExpirationFromToken(token, tokenType)
+            ?: throw BaseException(CommonErrorCode.EXPIRED_JWT_EXCEPTION)
+        if (expiration.before(Date())) throw BaseException(CommonErrorCode.EXPIRED_JWT_EXCEPTION)
+    }
+
+    fun getUserIdFromToken(token: String, tokenType: TokenType): String {
+        val (_, secret) = getExpirationAndSecret(tokenType)
+        return Jwts.parserBuilder().setSigningKey(secret.toByteArray()).build()
+            .parseClaimsJws(token).body.subject
     }
 
     fun getAuthentication(token: String?): Authentication {
@@ -119,13 +108,16 @@ class JwtService(
         return UsernamePasswordAuthenticationToken(users, "")
     }
 
-    fun getIdFromToken(token: String): String =
-        Jwts.parserBuilder().setSigningKey(jwtProperty.accesstoken.secret.toByteArray()).build()
-            .parseClaimsJws(token).body.subject
+    private fun getExpirationFromToken(token: String, tokenType: TokenType): Date? =
+        when (tokenType) {
+            TokenType.ACCESS ->
+                Jwts.parserBuilder().setSigningKey(jwtProperty.accesstoken.secret.toByteArray()).build()
+                    .parseClaimsJws(token).body.expiration
 
-    fun getExpirationFromToken(token: String): Date =
-        Jwts.parserBuilder().setSigningKey(jwtProperty.accesstoken.secret.toByteArray()).build()
-            .parseClaimsJws(token).body.expiration
+            TokenType.REFRESH ->
+                Jwts.parserBuilder().setSigningKey(jwtProperty.refreshtoken.secret.toByteArray()).build()
+                    .parseClaimsJws(token).body.expiration
+        }
 
 
     companion object {

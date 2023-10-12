@@ -3,37 +3,20 @@ package com.falco.cocktaildakk.controller
 import com.falco.cocktaildakk.domain.common.CommonResponse
 import com.falco.cocktaildakk.domain.token.request.AccessTokenRequest
 import com.falco.cocktaildakk.domain.token.response.AccessTokenAndRefreshToken
-import com.falco.cocktaildakk.domain.user.LoginType
 import com.falco.cocktaildakk.service.AuthService
 import com.falco.cocktaildakk.service.SocialLoginService
 import org.springframework.web.bind.annotation.*
 
-@RestController("/auth")
+@RestController
+@RequestMapping("/auth")
 class AuthController(
     private val socialLoginService: SocialLoginService,
     private val authService: AuthService,
 ) {
 
-    @ResponseBody
-    @GetMapping("/kakao")
-    fun kakaoCallback(@RequestParam code: String): CommonResponse<AccessTokenAndRefreshToken> {
-        // -- 클라이언트 진행 영역 --
-        println("Id Token : $code")
-        val accessToken = socialLoginService.getKakaoAccessToken(code)!!.accessToken
-        println("Kakao AccessToken : " + accessToken)
-        // -- 클라이언트 진행 영역 --
-
-        return CommonResponse.onSuccess(
-            authService.register(
-                loginType = LoginType.KAKAO,
-                socialAccessToken = accessToken
-            )
-        )
-    }
-
     @PostMapping("/kakao-login")
     fun login(
-        @RequestBody accessToken: AccessTokenRequest
+        @RequestBody accessToken: AccessTokenRequest // 카카오 엑세스 토큰을 의미
     ): CommonResponse<AccessTokenAndRefreshToken> {
         return CommonResponse.onSuccess(authService.kakaoLogin(accessToken.accessToken))
     }
@@ -41,8 +24,8 @@ class AuthController(
     @PostMapping("/auto-login")
     fun autoLogin(
         @RequestBody accessToken: AccessTokenRequest
-    ) {
-//        return CommonResponse.onSuccess(authService.tokenLogin(accessToken.accessToken))
+    ): CommonResponse<AccessTokenAndRefreshToken> {
+        return CommonResponse.onSuccess(authService.autoLogin(accessToken.accessToken))
     }
 
     @ResponseBody

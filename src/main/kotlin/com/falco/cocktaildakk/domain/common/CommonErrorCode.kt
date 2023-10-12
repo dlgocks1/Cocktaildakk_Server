@@ -35,6 +35,7 @@ enum class CommonErrorCode(
     APPLE_BAD_REQUEST(HttpStatus.BAD_REQUEST, "OAUTH001", "애플 토큰이 잘못되었습니다."),
     APPLE_SERVER_ERROR(HttpStatus.FORBIDDEN, "OAUTH002", "애플 서버와 통신에 실패 하였습니다."),
     FAIL_TO_MAKE_APPLE_PUBLIC_KEY(HttpStatus.BAD_REQUEST, "OAUTH003", "새로운 애플 공개키 생성에 실패하였습니다."),
+    NAVER_LOGIN_NOT_PROVIDED(HttpStatus.BAD_REQUEST, "OAUTH004", "네이버 로그인은 지원하지 않습니다."),
 
     /**
      * UXXX : USER 관련 에러

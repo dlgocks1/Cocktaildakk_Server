@@ -9,5 +9,5 @@ data class User(
     @Id
     var id: String,
     @Column(name = "login_type")
-    val loginType: LoginType,
+    val loginType: String,
 )
