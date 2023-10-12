@@ -21,20 +21,30 @@ repositories {
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-//    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("javax.persistence:javax.persistence-api:2.2")
+    implementation("mysql:mysql-connector-java:8.0.33")
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+
+    /** Authority */
+    implementation("org.springframework.boot:spring-boot-starter-security")
+
+    /** Data */
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+
+    /** String Parser */
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("com.google.code.gson:gson:2.8.9")
+    implementation("org.json:json:20230618")
 
     /** JWT */
     implementation("io.jsonwebtoken:jjwt-api:0.11.2")
     implementation("io.jsonwebtoken:jjwt-impl:0.11.2")
     implementation("io.jsonwebtoken:jjwt-jackson:0.11.2")
 
-    implementation("javax.persistence:javax.persistence-api:2.2")
-    implementation("mysql:mysql-connector-java:8.0.33")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
+    /** Excel */
     implementation("org.apache.poi:poi:5.0.0")
     implementation("org.apache.poi:poi-ooxml:5.0.0")
 
