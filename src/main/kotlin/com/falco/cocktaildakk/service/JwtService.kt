@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
+import org.springframework.security.core.GrantedAuthority
 import org.springframework.stereotype.Component
 import java.util.*
 
@@ -64,7 +65,7 @@ class JwtService(
             val claims = Jwts.parserBuilder().setSigningKey(jwtProperty.accesstoken.secret.toByteArray()).build()
                 .parseClaimsJws(token).body
             val expirationDate = claims.expiration
-            !expirationDate.before(Date())
+            return !expirationDate.before(Date())
         } catch (e: SecurityException) {
             servletRequest.setAttribute("exception", "MalformedJwtException")
             logger.info("잘못된 JWT 서명입니다.")
@@ -105,7 +106,7 @@ class JwtService(
         val userId = Jwts.parserBuilder().setSigningKey(jwtProperty.accesstoken.secret.toByteArray()).build()
             .parseClaimsJws(token).body.subject
         val users = userRepository.findByIdOrNull(userId)
-        return UsernamePasswordAuthenticationToken(users, "")
+        return UsernamePasswordAuthenticationToken(users, "", listOf(GrantedAuthority { "User" }))
     }
 
     private fun getExpirationFromToken(token: String, tokenType: TokenType): Date? =

@@ -19,7 +19,7 @@ class JpaConfiguration(
         config.jdbcUrl = jpaProperty.url
         config.username = jpaProperty.username
         config.password = jpaProperty.password
-        config.driverClassName = "com.mysql.cj.jdbc.Driver" // Set your driver class name
+        config.driverClassName = jpaProperty.driver
         return HikariDataSource(config)
     }
 

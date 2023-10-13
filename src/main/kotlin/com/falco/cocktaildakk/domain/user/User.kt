@@ -7,7 +7,8 @@ import jakarta.persistence.Id
 @Entity(name = "user")
 data class User(
     @Id
-    var id: String,
+    @Column(name = "id")
+    var userId: String,
     @Column(name = "login_type")
     val loginType: String,
 )

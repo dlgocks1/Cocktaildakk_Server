@@ -4,13 +4,13 @@ import com.falco.cocktaildakk.domain.common.CommonResponse
 import com.falco.cocktaildakk.domain.token.request.AccessTokenRequest
 import com.falco.cocktaildakk.domain.token.response.AccessTokenAndRefreshToken
 import com.falco.cocktaildakk.service.AuthService
-import com.falco.cocktaildakk.service.SocialLoginService
+import com.falco.cocktaildakk.service.JwtService
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/auth")
 class AuthController(
-    private val socialLoginService: SocialLoginService,
+    private val jwtService: JwtService,
     private val authService: AuthService,
 ) {
 
@@ -28,9 +28,8 @@ class AuthController(
         return CommonResponse.onSuccess(authService.autoLogin(accessToken.accessToken))
     }
 
-    @ResponseBody
-    @GetMapping("/auth")
-    fun register(): String {
-        return "회원가입 진행"
+    @GetMapping("/test-register/{userId}")
+    fun testRegister(@PathVariable("userId") userId: String): CommonResponse<AccessTokenAndRefreshToken> {
+        return CommonResponse.onSuccess(jwtService.generateTokenByUserId(userId))
     }
 }

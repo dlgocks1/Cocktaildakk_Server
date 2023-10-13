@@ -2,7 +2,6 @@ package com.falco.cocktaildakk.controller
 
 import com.falco.cocktaildakk.domain.common.CommonResponse
 import com.falco.cocktaildakk.domain.token.response.AccessTokenAndRefreshToken
-import com.falco.cocktaildakk.domain.user.LoginType
 import com.falco.cocktaildakk.service.AuthService
 import com.falco.cocktaildakk.service.SocialLoginService
 import org.springframework.web.bind.annotation.GetMapping
@@ -30,11 +29,6 @@ class HealthController(
         println("Kakao AccessToken : " + accessToken)
         // -- 클라이언트 진행 영역 --
 
-        return CommonResponse.onSuccess(
-            authService.getAccessTokenAndRefreshToken(
-                loginType = LoginType.KAKAO,
-                socialAccessToken = accessToken
-            )
-        )
+        return CommonResponse.onSuccess(authService.kakaoLogin(accessToken))
     }
 }
