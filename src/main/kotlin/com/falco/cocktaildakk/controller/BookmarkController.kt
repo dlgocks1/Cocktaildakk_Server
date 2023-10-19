@@ -3,6 +3,7 @@ package com.falco.cocktaildakk.controller
 import com.falco.cocktaildakk.domain.common.CommonResponse
 import com.falco.cocktaildakk.domain.user.User
 import com.falco.cocktaildakk.service.BookmarkService
+import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.slf4j.LoggerFactory
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -21,6 +22,7 @@ class BookmarkController(
     private val logger = LoggerFactory.getLogger(BookmarkController::class.java)
 
     @GetMapping("/{cocktailId}")
+    @Operation(summary = "칵테일 북마크 추가/삭제")
     fun getCocktailById(
         @AuthenticationPrincipal user: User,
         @RequestParam("cocktailId") cocktailId: Int,

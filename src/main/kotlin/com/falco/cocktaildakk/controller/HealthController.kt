@@ -4,12 +4,12 @@ import com.falco.cocktaildakk.domain.common.CommonResponse
 import com.falco.cocktaildakk.domain.token.response.AccessTokenAndRefreshToken
 import com.falco.cocktaildakk.service.AuthService
 import com.falco.cocktaildakk.service.SocialLoginService
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.ResponseBody
-import org.springframework.web.bind.annotation.RestController
+import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.web.bind.annotation.*
 
 @RestController
+@Tag(name = "HealthController")
+@RequestMapping("/health")
 class HealthController(
     private val socialLoginService: SocialLoginService,
     private val authService: AuthService

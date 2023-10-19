@@ -73,8 +73,10 @@ class SecurityConfig(
                 authorizeRequests
                     .requestMatchers("/webjars/**", "/image/**", "/users/refresh").permitAll()
                     .requestMatchers("/profile").permitAll()
+                    .requestMatchers("/favicon.ico").permitAll()
+                    .requestMatchers("/swagger-ui/**").permitAll()
                     .requestMatchers("/login/**").permitAll()
-                    .requestMatchers("/kakao").permitAll() // 카카오 콜백 테스트용
+                    .requestMatchers("/health/**").permitAll()
                     .requestMatchers("/test/**").permitAll()
                     .requestMatchers("/auth/**").permitAll()
                     .requestMatchers("/admin/**").hasAnyRole("ADMIN")

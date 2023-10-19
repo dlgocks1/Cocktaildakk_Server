@@ -26,6 +26,7 @@ dependencies {
     implementation("javax.persistence:javax.persistence-api:2.2")
     implementation("mysql:mysql-connector-java:8.0.33")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2")
 
     /** Authority */
     implementation("org.springframework.boot:spring-boot-starter-security")
