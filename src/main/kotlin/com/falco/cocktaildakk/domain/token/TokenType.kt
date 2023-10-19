@@ -8,8 +8,8 @@ enum class TokenType {
 
     fun generate(expiration: Date, token: String, userId: String): Token {
         return when (this) {
-            ACCESS -> AccessToken(userId, token, expiration)
-            REFRESH -> RefreshToken(userId, token, expiration)
+            ACCESS -> AccessToken(userId, token, expiration.time)
+            REFRESH -> RefreshToken(userId, token, expiration.time)
         }
     }
 }
