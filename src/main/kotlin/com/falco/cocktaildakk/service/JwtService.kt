@@ -106,7 +106,7 @@ class JwtService(
         val userId = Jwts.parserBuilder().setSigningKey(jwtProperty.accesstoken.secret.toByteArray()).build()
             .parseClaimsJws(token).body.subject
         val users = userRepository.findByIdOrNull(userId)
-        return UsernamePasswordAuthenticationToken(users, "", listOf(GrantedAuthority { "User" }))
+        return UsernamePasswordAuthenticationToken(users, "", listOf(GrantedAuthority { "ROLE_USER" }))
     }
 
     private fun getExpirationFromToken(token: String, tokenType: TokenType): Date? =

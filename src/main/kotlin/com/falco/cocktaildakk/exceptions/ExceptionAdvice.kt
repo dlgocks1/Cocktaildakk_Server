@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import java.io.PrintWriter
 import java.io.StringWriter
+import java.sql.SQLIntegrityConstraintViolationException
 import java.util.*
 
 @RestControllerAdvice
@@ -36,6 +37,18 @@ class ExceptionAdvice {
         )
     }
 
+    @ExceptionHandler(SQLIntegrityConstraintViolationException::class)
+    fun handleSQLIntegrityConstraintViolationException(e: SQLIntegrityConstraintViolationException): ResponseEntity<*> {
+        val error = "잘못된 입력 값 : " + e.message
+        return ResponseEntity<Any?>(
+            CommonResponse.onFailure("ILLEGAL_ARGUMENT", "데이터가 존재하지 않습니다.", Collections.singletonMap("error", error)),
+            null,
+            HttpStatus.NO_CONTENT
+        )
+    }
+
+
+    @ExceptionHandler(IllegalArgumentException::class)
     fun handleIllegalArgumentException(e: IllegalArgumentException): ResponseEntity<*> {
         val error = "잘못된 입력 값 : " + e.message
         return ResponseEntity<Any?>(
