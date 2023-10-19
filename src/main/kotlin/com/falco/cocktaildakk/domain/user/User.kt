@@ -8,7 +8,13 @@ import jakarta.persistence.Id
 data class User(
     @Id
     @Column(name = "id")
-    var userId: String,
+    var id: String,
     @Column(name = "login_type")
     val loginType: String,
+    @Column(name = "weight_level")
+    val weightLevel: Int = 2,
+    @Column(name = "weight_base")
+    val weightBase: Int = 2,
+    @Column(name = "weight_keyword")
+    val weightKeyword: Int = 2,
 )
