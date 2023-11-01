@@ -29,7 +29,7 @@ class TokenCrudTest {
             AccessToken(
                 userId = "-999",
                 token = "This-is-Token",
-                expiration = Date(),
+                expiration = 155205005,
             )
         )
         assert(accessTokenRepository.findByIdOrNull("-999") != null)
