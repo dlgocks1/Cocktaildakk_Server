@@ -1,0 +1,38 @@
+spring:
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  config:
+    activate:
+      on-profile: dev
+  sql:
+    init:
+      platform: mysql
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${JDBC_URL}
+    username: ${JDBC_DB_USERNAME}
+    password: ${JDBC_DB_PASSWORD}
+  jpa:
+    # create, update, create-drop, none ?? ??? ????.
+    # create: ????? ?? ? ?? ??
+    # update: ??? ??? ??
+    # create-drop: create? ??? ?? ??? ??? DROP
+    # none: ???? ??
+    hibernate:
+      ddl-auto: create
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    # DDl ?? ? ?????? ??? ?? ????
+    generate-ddl: false
+    # ???? ??? ???? ??
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 1000
+
+
+
