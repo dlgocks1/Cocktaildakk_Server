@@ -59,7 +59,6 @@ class JwtService(
         )
     }
 
-
     fun validateAcessTokenFromRequest(servletRequest: ServletRequest, token: String?): Boolean {
         try {
             val claims = Jwts.parserBuilder().setSigningKey(jwtProperty.accesstoken.secret.toByteArray()).build()
@@ -85,19 +84,10 @@ class JwtService(
         return false
     }
 
-    private fun getExpirationAndSecret(tokenType: TokenType) = when (tokenType) {
-        TokenType.ACCESS -> jwtProperty.accesstoken.expiration to jwtProperty.accesstoken.secret
-        TokenType.REFRESH -> jwtProperty.refreshtoken.expiration to jwtProperty.refreshtoken.secret
-    }
-
-    fun validateToken(token: String, tokenType: TokenType) {
-        val expiration = getExpirationFromToken(token, tokenType)
-            ?: throw BaseException(CommonErrorCode.EXPIRED_JWT_EXCEPTION)
-        if (expiration.before(Date())) throw BaseException(CommonErrorCode.EXPIRED_JWT_EXCEPTION)
-    }
 
     fun getUserIdFromToken(token: String, tokenType: TokenType): String {
         val (_, secret) = getExpirationAndSecret(tokenType)
+        validateToken(token, tokenType)
         return Jwts.parserBuilder().setSigningKey(secret.toByteArray()).build()
             .parseClaimsJws(token).body.subject
     }
@@ -107,6 +97,12 @@ class JwtService(
             .parseClaimsJws(token).body.subject
         val users = userRepository.findByIdOrNull(userId)
         return UsernamePasswordAuthenticationToken(users, "", listOf(GrantedAuthority { "ROLE_USER" }))
+    }
+
+    private fun validateToken(token: String, tokenType: TokenType) {
+        val expiration = getExpirationFromToken(token, tokenType)
+            ?: throw BaseException(CommonErrorCode.EXPIRED_JWT_EXCEPTION)
+        if (expiration.before(Date())) throw BaseException(CommonErrorCode.EXPIRED_JWT_EXCEPTION)
     }
 
     private fun getExpirationFromToken(token: String, tokenType: TokenType): Date? =
@@ -119,6 +115,11 @@ class JwtService(
                 Jwts.parserBuilder().setSigningKey(jwtProperty.refreshtoken.secret.toByteArray()).build()
                     .parseClaimsJws(token).body.expiration
         }
+
+    private fun getExpirationAndSecret(tokenType: TokenType) = when (tokenType) {
+        TokenType.ACCESS -> jwtProperty.accesstoken.expiration to jwtProperty.accesstoken.secret
+        TokenType.REFRESH -> jwtProperty.refreshtoken.expiration to jwtProperty.refreshtoken.secret
+    }
 
 
     companion object {

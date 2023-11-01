@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @Tag(name = "HealthController")
-@RequestMapping("/health")
+@RequestMapping
 class HealthController(
     private val socialLoginService: SocialLoginService,
     private val authService: AuthService
 ) {
 
-    @GetMapping
+    @GetMapping("/health")
     fun healthTest(): String {
         return "I'm Healthy!"
     }
@@ -25,7 +25,7 @@ class HealthController(
     fun kakaoCallback(@RequestParam code: String): CommonResponse<AccessTokenAndRefreshToken> {
         // -- 클라이언트 진행 영역 --
         println("Id Token : $code")
-        val accessToken = socialLoginService.getKakaoAccessToken(code)!!.accessToken
+        val accessToken = socialLoginService.getKakaoAccessToken(code).accessToken
         println("Kakao AccessToken : " + accessToken)
         // -- 클라이언트 진행 영역 --
 

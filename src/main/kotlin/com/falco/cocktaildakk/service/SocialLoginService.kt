@@ -13,9 +13,9 @@ class SocialLoginService {
 
     private val kakaoWebClient: WebClient = WebClient.builder().build()
     private val REST_APY_KEY = "d8877d81bd155b6a7e526433c467eaf8"
-    private val REDIRECT_URI = "http://localhost:8080/kakao"
+    private val REDIRECT_URI = "http://localhost:9000/kakao"
     private val GRANT_TYPE = "authorization_code"
-    // 카카오 로그인 URL : kauth.kakao.com/oauth/authorize?client_id=d8877d81bd155b6a7e526433c467eaf8&redirect_uri=http://localhost:8080/kakao&response_type=code
+    // 카카오 로그인 URL : kauth.kakao.com/oauth/authorize?client_id=d8877d81bd155b6a7e526433c467eaf8&redirect_uri=http://localhost:9000/kakao&response_type=code
 
     fun getKakaoAccessToken(code: String): KakaoAccessTokenResponse {
 
