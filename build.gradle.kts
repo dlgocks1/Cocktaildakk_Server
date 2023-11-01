@@ -13,6 +13,7 @@ version = "0.0.1-SNAPSHOT"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 repositories {
@@ -63,4 +64,9 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+tasks.withType<Jar> {
+    enabled = false
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
