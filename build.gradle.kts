@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "com.falco"
-version = "0.0.1-SNAPSHOT"
+version = "0.0.1"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -67,6 +67,6 @@ tasks.withType<Test> {
 }
 
 tasks.withType<Jar> {
-    enabled = false
+    enabled = true
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
