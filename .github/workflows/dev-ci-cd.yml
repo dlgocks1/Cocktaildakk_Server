@@ -54,7 +54,8 @@ jobs:
       - name: Generate deployment package
         run: |
           mkdir -p deploy
-          cp build/libs/*.jar deploy/cocktaildakk-dev.jar
+          cp build/libs/*.jar deploy/
+          mv -u deploy/*.jar deploy/cocktaildakk-dev.jar
           cp Procfile deploy/Procfile
           cp -r .ebextensions-dev deploy/.ebextensions
           cp -r .platform deploy/.platform
