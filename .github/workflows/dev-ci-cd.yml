@@ -55,7 +55,7 @@ jobs:
         run: |
           mkdir -p deploy
           cp build/libs/*.jar deploy/
-          cp Procfile deploy/Procfile
+          cp Procfile deploy/
           cp -r .ebextensions-dev deploy/.ebextensions
           cp -r .platform deploy/.platform
           cd deploy && zip -r cocktaildakk-dev-${{steps.current-time.outputs.formattedTime}}-${{github.sha}} .
