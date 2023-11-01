@@ -2,12 +2,15 @@ package com.falco.cocktaildakk.service
 
 import com.falco.cocktaildakk.domain.bookmark.Bookmark
 import com.falco.cocktaildakk.domain.cocktail.Cocktail
+import com.falco.cocktaildakk.domain.common.CommonErrorCode
 import com.falco.cocktaildakk.domain.common.PageResponse
 import com.falco.cocktaildakk.domain.user.User
+import com.falco.cocktaildakk.exceptions.BaseException
 import com.falco.cocktaildakk.repository.BookmarkRepository
 import com.falco.cocktaildakk.repository.CocktailRepository
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
 @Service
@@ -20,8 +23,9 @@ class BookmarkService(
         return if (bookmark == null) {
             bookmarkRepository.save(
                 Bookmark(
-                    userId = user.id,
-                    cocktailId = cocktailId
+                    user = user,
+                    cocktail = cocktailRepository.findByIdOrNull(cocktailId)
+                        ?: throw BaseException(CommonErrorCode.NOT_EXIST_COCKTAIL)
                 )
             )
             "북마크하였습니다."
@@ -39,7 +43,7 @@ class BookmarkService(
                 Sort.by("id").descending()
             )
         )
-        val cocktailIds = bookmarks.toList().map { it.cocktailId }
+        val cocktailIds = bookmarks.toList().map { it.cocktail.id }
         val cocktails = cocktailRepository.findAllById(cocktailIds)
         return PageResponse(
             isLast = bookmarks.isLast,

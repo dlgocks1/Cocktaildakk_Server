@@ -1,5 +1,7 @@
 package com.falco.cocktaildakk.domain.bookmark
 
+import com.falco.cocktaildakk.domain.cocktail.Cocktail
+import com.falco.cocktaildakk.domain.user.User
 import jakarta.persistence.*
 
 @Entity(name = "bookmark")
@@ -8,8 +10,10 @@ data class Bookmark(
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,
-    @Column(name = "user_id")
-    val userId: String,
-    @Column(name = "cocktail_id")
-    val cocktailId: Long,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false, updatable = false)
+    val user: User,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cocktail_id", nullable = false, updatable = false)
+    val cocktail: Cocktail,
 )
