@@ -24,8 +24,8 @@ jobs:
         with:
           files: src/main/resources/application-common.properties
         env:
-          jwt.secret: ${{ secrets.JWT_SECRET_KEY }}
-          jwt.refresh: ${{ secrets.JWT_REFRESH_KEY }}
+          jwt.accesstoken.secret: ${{ secrets.JWT_SECRET_KEY }}
+          jwt.refreshtoken.secret: ${{ secrets.JWT_REFRESH_KEY }}
 
       - name: Set Environment Domain - Domain DEV Yml
         uses: microsoft/variable-substitution@v1
