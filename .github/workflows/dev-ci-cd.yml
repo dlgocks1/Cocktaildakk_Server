@@ -2,7 +2,7 @@ name: CocktailDakk Dev CI/CD
 
 on:
   push:
-    branches: [ dev ]
+    branches: [ develop ]
   workflow_dispatch: # 수동 실행 옵션 (생략)
 
 jobs:
