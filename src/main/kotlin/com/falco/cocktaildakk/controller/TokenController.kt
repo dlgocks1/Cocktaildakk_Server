@@ -20,7 +20,7 @@ class TokenController(
     private val authService: AuthService
 ) {
     @PostMapping("/login")
-    @Operation(summary = "엑세스 토큰 로그인")
+    @Operation(summary = "엑세스 토큰 (자동)로그인")
     @ApiErrorCodeExample(UserAuthErrorCode::class)
     fun autoLogin(
         @RequestBody accessToken: TokenRequest

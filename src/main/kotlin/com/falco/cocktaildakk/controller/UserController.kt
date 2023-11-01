@@ -31,7 +31,7 @@ class UserController(
     }
 
     @PostMapping("/set-preference")
-    @Operation(summary = "유저 정보를 입력합니다.")
+    @Operation(summary = "유저 정보를 Upsert")
     fun setUserPreference(
         @AuthenticationPrincipal user: User,
         @Parameter(name = "키워드 및 베이스(기주)는 ','로 구분합니다.")
