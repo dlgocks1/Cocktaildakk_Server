@@ -57,7 +57,7 @@ jobs:
           mkdir -p deploy
           cp build/libs/cocktaildakk-0.0.1.jar deploy/application.jar
           cp Procfile deploy/Procfile
-          cp -r .ebextensions deploy/.ebextensions
+          cp -r .ebextensions-dev deploy/.ebextensions
           cd deploy && zip -r deploy.zip .
 
       - name: Deploy Consumer to EB
