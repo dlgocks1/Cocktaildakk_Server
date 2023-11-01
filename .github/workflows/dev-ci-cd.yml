@@ -19,7 +19,6 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
         shell: bash
@@ -39,11 +38,45 @@ jobs:
         run: echo "CurrentTime=${{steps.current-time.outputs.formattedTime}}"
         shell: bash # (9) 확보한 시간 보여주기
 
-#      - name: Generate deployment package
-#        run: |
-#          mkdir -p deploy
-#          cp build/libs/*.jar deploy/cmc-dev-api.jar
-#          cp Procfile deploy/Procfile
-#          cp -r .ebextensions-dev deploy/.ebextensions
-#          cp -r .platform deploy/.platform
-#          cd deploy && zip -r cmc-dev-api-${{steps.current-time.outputs.formattedTime}}-${{github.sha}} .
+      - name: Generate deployment package
+        run: |
+          mkdir -p deploy
+          cp build/libs/*.jar deploy/cocktaildakk-dev.jar
+          cp Procfile deploy/Procfile
+          cp -r .ebextensions-dev deploy/.ebextensions
+          cp -r .platform deploy/.platform
+          cd deploy && zip -r cocktaildakk-dev-${{steps.current-time.outputs.formattedTime}}-${{github.sha}} .
+
+      - name: Deploy Consumer to EB
+        uses: einaregilsson/beanstalk-deploy@v19
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
+          application_name: cocktaildakk
+          environment_name: Cocktaildakk-env
+          version_label: cocktaildakk-dev-${{steps.current-time.outputs.formattedTime}}-${{github.sha}}
+          region: ap-northeast-2
+          deployment_package: deploy/cocktaildakk-dev-${{steps.current-time.outputs.formattedTime}}-${{github.sha}}.zip
+          wait_for_deployment: false
+
+      #    - name: Generate deployment package
+      #        run: |
+      #          mkdir -p deploy
+      #          cp build/libs/*.jar deploy/application.jar
+      #          cp Procfile deploy/Procfile
+      #          cp -r .ebextensions deploy/.ebextensions
+      #          cp -r .platform deploy/.platform
+      #          cd deploy && zip -r deploy.zip .
+
+      #          - name: Beanstalk Deploy
+      #            uses: einaregilsson/beanstalk-deploy@v20
+      #            with:
+      #              aws_access_key: ${{secrets.AWS_ACCESS_KEY}}
+      #              aws_secret_key: ${{secrets.AWS_SECRET_KEY}}
+      #              application_name: booklog
+      #              environment_name: Booklog-env
+      #              version_label: github-action-${{steps.current-time.outputs.formattedTime}}
+      #              region: ap-northeast-2
+      #              deployment_package: deploy/deploy.zip
+      #              wait_for_environment_recovery: 180
+
