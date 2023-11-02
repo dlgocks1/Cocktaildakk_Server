@@ -7,16 +7,14 @@ import com.falco.cocktaildakk.domain.common.PageResponse
 import com.falco.cocktaildakk.domain.user.User
 import com.falco.cocktaildakk.exceptions.BaseException
 import com.falco.cocktaildakk.repository.BookmarkRepository
-import com.falco.cocktaildakk.repository.CocktailRepository
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
 @Service
 class BookmarkService(
     private val bookmarkRepository: BookmarkRepository,
-    private val cocktailRepository: CocktailRepository
+    private val cacheService: CocktailCacheService
 ) {
     fun bookmark(user: User, cocktailId: Long): String {
         val bookmark = bookmarkRepository.findByUserIdAndCocktailId(user.id, cocktailId)
@@ -24,7 +22,7 @@ class BookmarkService(
             bookmarkRepository.save(
                 Bookmark(
                     user = user,
-                    cocktail = cocktailRepository.findByIdOrNull(cocktailId)
+                    cocktail = cacheService.getCocktails().find { it.id == cocktailId }
                         ?: throw BaseException(CommonErrorCode.NOT_EXIST_COCKTAIL)
                 )
             )
@@ -44,7 +42,7 @@ class BookmarkService(
             )
         )
         val cocktailIds = bookmarks.toList().map { it.cocktail.id }
-        val cocktails = cocktailRepository.findAllById(cocktailIds)
+        val cocktails = cacheService.getCocktails().filter { cocktailIds.contains(it.id) }
         return PageResponse(
             isLast = bookmarks.isLast,
             totalCnt = bookmarks.totalElements,

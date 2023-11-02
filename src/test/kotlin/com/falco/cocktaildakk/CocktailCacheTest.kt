@@ -20,7 +20,7 @@ internal class CocktailCacheTest {
         println("-------------2")
         cacheService.getCocktails() // DB 요청 X
         println("-------------3")
-        cacheService.putCocktails() // DB 요청 후 캐싱 재정비
+        cacheService.reloadCocktails() // DB 요청 후 캐싱 재정비
         println("-------------4")
         cacheService.getCocktails() // DB 요청 X
     }
