@@ -2,7 +2,7 @@ name: dev Cocktaildakk BeanStalk CI/CD
 
 on:
   push:
-    branches: [ develop ]
+    branches: [ release ]
   workflow_dispatch: # 수동 실행 옵션 (생략)
 
 jobs:
