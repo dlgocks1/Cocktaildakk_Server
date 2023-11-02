@@ -58,6 +58,7 @@ jobs:
           cp build/libs/*.jar deploy/cocktaildakk-dev.jar
           cp Procfile deploy/Procfile
           cp -r .ebextensions-dev deploy/.ebextensions
+          cp -r .platform deploy/.platform
           cd deploy && zip -r cocktaildakk-dev-${{steps.current-time.outputs.formattedTime}}-${{github.sha}}.zip .
 
       - name: Deploy Consumer to EB
@@ -70,4 +71,4 @@ jobs:
           version_label: cocktaildakk-dev-${{steps.current-time.outputs.formattedTime}}-${{github.sha}}
           region: ap-northeast-2
           deployment_package: deploy/cocktaildakk-dev-${{steps.current-time.outputs.formattedTime}}-${{github.sha}}.zip
-          wait_for_deployment: false
+          wait_for_deployment: true
