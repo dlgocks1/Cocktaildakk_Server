@@ -2,7 +2,9 @@ jwt:
   header: X-AUTH-TOKEN
   accesstoken:
     secret: ${JWT_SECRET_KEY}
+    #    secret: ${jwt.secret.key}
     expiration: 31536000000
   refreshtoken:
     secret: ${JWT_REFRESH_KEY}
+    #    secret: ${jwt.refresh.key}
     expiration: 31536000000

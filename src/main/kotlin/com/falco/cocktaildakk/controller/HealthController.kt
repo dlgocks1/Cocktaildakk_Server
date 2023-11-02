@@ -15,7 +15,7 @@ class HealthController(
     private val authService: AuthService
 ) {
 
-    @GetMapping("/health")
+    @GetMapping("/")
     fun healthTest(): String {
         return "I'm Healthy!"
     }

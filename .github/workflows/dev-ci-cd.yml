@@ -19,22 +19,22 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      #      - name: Set Environment - Common Yml
-      #        uses: microsoft/variable-substitution@v1
-      #        with:
-      #          files: src/main/resources/application-common.yml
-      #        env:
-      #          jwt.accesstoken.secret: ${{ secrets.JWT_SECRET_KEY }}
-      #          jwt.refreshtoken.secret: ${{ secrets.JWT_REFRESH_KEY }}
-      #
-      #      - name: Set Environment Domain - DEV Yml
-      #        uses: microsoft/variable-substitution@v1
-      #        with:
-      #          files: src/main/resources/application-dev.yml
-      #        env:
-      #          spring.datasource.url: ${{ secrets.JDBC_URL }}
-      #          spring.datasource.username: ${{ secrets.JDBC_DB_USERNAME }}
-      #          spring.datasource.password: ${{ secrets.JDBC_DB_PASSWORD }}
+      - name: Set Environment - Common Yml
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: src/main/resources/application-common.yml
+        env:
+          jwt.accesstoken.secret: ${{ secrets.JWT_SECRET_KEY }}
+          jwt.refreshtoken.secret: ${{ secrets.JWT_REFRESH_KEY }}
+
+      - name: Set Environment Domain - DEV Yml
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: src/main/resources/application-dev.yml
+        env:
+          spring.datasource.url: ${{ secrets.JDBC_URL }}
+          spring.datasource.username: ${{ secrets.JDBC_DB_USERNAME }}
+          spring.datasource.password: ${{ secrets.JDBC_DB_PASSWORD }}
 
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew

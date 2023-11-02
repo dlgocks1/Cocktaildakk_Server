@@ -79,6 +79,8 @@ class SecurityConfig(
                     .requestMatchers("/health/**").permitAll()
                     .requestMatchers("/test/**").permitAll()
                     .requestMatchers("/auth/**").permitAll()
+                    .requestMatchers("/")
+                    .permitAll() // EB에서 HelathCheck를 "/"으로 함 200을 반환해야함 -> https://stackoverflow.com/questions/50212033/awselb-health-is-failing-or-not-available-for-all-instances
                     .requestMatchers("/admin/**").permitAll()
 //                    .requestMatchers("/admin/**").hasAnyRole("ADMIN")
                     .anyRequest()
