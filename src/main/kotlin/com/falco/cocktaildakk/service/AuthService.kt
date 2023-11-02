@@ -1,11 +1,13 @@
 package com.falco.cocktaildakk.service
 
 import com.falco.cocktaildakk.controller.UserInfoReq
+import com.falco.cocktaildakk.domain.common.CommonErrorCode
 import com.falco.cocktaildakk.domain.token.TokenType
 import com.falco.cocktaildakk.domain.token.response.AccessTokenAndRefreshToken
 import com.falco.cocktaildakk.domain.user.LoginType
 import com.falco.cocktaildakk.domain.user.User
 import com.falco.cocktaildakk.domain.user.UserInfo
+import com.falco.cocktaildakk.exceptions.BaseException
 import com.falco.cocktaildakk.repository.UserInfoRepository
 import com.falco.cocktaildakk.repository.UserRepository
 import org.springframework.data.repository.findByIdOrNull
@@ -60,6 +62,10 @@ class AuthService(
                 weightKeyword = userInfoReq.weightKeyword,
             )
         )
+    }
+
+    fun getUserPreference(user: User): UserInfo {
+        return userInfoRepository.findByIdOrNull(user.id) ?: throw BaseException(CommonErrorCode.NOT_EXIST_USER)
     }
 
 }

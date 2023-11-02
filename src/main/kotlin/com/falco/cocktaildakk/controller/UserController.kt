@@ -10,10 +10,7 @@ import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.security.core.annotation.AuthenticationPrincipal
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @Tag(name = "UserController")
@@ -30,7 +27,7 @@ class UserController(
         return CommonResponse.onSuccess(authService.checkUserPreference(accessToken.token))
     }
 
-    @PostMapping("/set-preference")
+    @PostMapping("/preference")
     @Operation(summary = "유저 정보를 Upsert")
     fun setUserPreference(
         @AuthenticationPrincipal user: User,
@@ -38,6 +35,12 @@ class UserController(
         @RequestBody userInfoReq: UserInfoReq
     ): CommonResponse<UserInfo> {
         return CommonResponse.onSuccess(authService.setUserPreference(user, userInfoReq))
+    }
+
+    @GetMapping("/preference")
+    @Operation(summary = "유저 정보 조회")
+    fun getUserPreference(@AuthenticationPrincipal user: User): CommonResponse<UserInfo> {
+        return CommonResponse.onSuccess(authService.getUserPreference(user))
     }
 }
 
