@@ -27,7 +27,7 @@ jobs:
           jwt.accesstoken.secret: ${{ secrets.JWT_SECRET_KEY }}
           jwt.refreshtoken.secret: ${{ secrets.JWT_REFRESH_KEY }}
 
-      - name: Set Environment Domain - Domain DEV Yml
+      - name: Set Environment Domain - DEV Yml
         uses: microsoft/variable-substitution@v1
         with:
           files: src/main/resources/application-dev.yml
@@ -55,10 +55,10 @@ jobs:
       - name: Generate deployment package
         run: |
           mkdir -p deploy
-          cp build/libs/cocktaildakk-0.0.1.jar deploy/application.jar
+          cp build/libs/*.jar deploy/cocktaildakk-dev.jar
           cp Procfile deploy/Procfile
           cp -r .ebextensions-dev deploy/.ebextensions
-          cd deploy && zip -r deploy.zip .
+          cd deploy && zip -r cocktaildakk-dev-${{steps.current-time.outputs.formattedTime}}-${{github.sha}}.zip .
 
       - name: Deploy Consumer to EB
         uses: einaregilsson/beanstalk-deploy@v21
@@ -69,5 +69,5 @@ jobs:
           environment_name: CocktaildakkDev-env
           version_label: cocktaildakk-dev-${{steps.current-time.outputs.formattedTime}}-${{github.sha}}
           region: ap-northeast-2
-          deployment_package: deploy/deploy.zip
+          deployment_package: deploy/cocktaildakk-dev-${{steps.current-time.outputs.formattedTime}}-${{github.sha}}.zip
           wait_for_deployment: false
