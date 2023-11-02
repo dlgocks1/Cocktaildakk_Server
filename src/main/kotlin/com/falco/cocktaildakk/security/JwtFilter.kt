@@ -8,10 +8,10 @@ import jakarta.servlet.ServletResponse
 import jakarta.servlet.http.HttpServletRequest
 import org.slf4j.LoggerFactory
 import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.util.StringUtils
 import org.springframework.web.context.request.RequestContextHolder
 import org.springframework.web.context.request.ServletRequestAttributes
 import org.springframework.web.filter.GenericFilterBean
+
 
 class JwtFilter(
     private val jwtService: JwtService
@@ -21,7 +21,7 @@ class JwtFilter(
         val httpServletRequest = servletRequest as HttpServletRequest
         val jwt = getJwt()
         val requestURI = httpServletRequest.requestURI
-        if (StringUtils.hasText(jwt) && jwtService.validateAcessTokenFromRequest(servletRequest, jwt)) {
+        if (!jwt.isNullOrBlank() && jwtService.validateAcessTokenFromRequest(servletRequest, jwt)) {
             val authentication = jwtService.getAuthentication(jwt)
             SecurityContextHolder.getContext().authentication = authentication
             JwtFilter.logger.info("Security Context에 '${authentication.name}' 인증 정보를 저장했습니다, uri: $requestURI")
