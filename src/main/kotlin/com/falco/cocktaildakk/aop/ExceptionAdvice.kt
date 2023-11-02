@@ -1,6 +1,7 @@
-package com.falco.cocktaildakk.exceptions
+package com.falco.cocktaildakk.aop
 
 import com.falco.cocktaildakk.domain.common.CommonResponse
+import com.falco.cocktaildakk.exceptions.BaseException
 import jakarta.servlet.http.HttpServletRequest
 import org.slf4j.LoggerFactory
 import org.springframework.core.convert.ConversionFailedException
@@ -58,6 +59,16 @@ class ExceptionAdvice {
         )
     }
 
+    @ExceptionHandler(IllegalStateException::class)
+    fun handleIllegalStateException(e: IllegalStateException): ResponseEntity<*> {
+        val error = "잘못된 상태 값 : " + e.message
+        return ResponseEntity<Any?>(
+            CommonResponse.onFailure("ILLEGAL_STATE", "잘못된 상태 에러", Collections.singletonMap("error", error)),
+            null,
+            HttpStatus.BAD_REQUEST
+        )
+    }
+
     @ExceptionHandler(ConversionFailedException::class)
     fun handleConversionFailedException(e: ConversionFailedException): ResponseEntity<*> {
         val error = e.value.toString() + "은(는) " + e.targetType + " 필드에 대한 유효한 값이 아닙니다."
@@ -81,7 +92,7 @@ class ExceptionAdvice {
         }
         pw.append(e.message)
         pw.append("\n=====================================================================")
-        ExceptionAdvice.logger.error(sw.toString())
+        logger.error(sw.toString())
     }
 
     @ExceptionHandler(value = [BaseException::class])

@@ -6,10 +6,7 @@ import com.falco.cocktaildakk.service.CocktailService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.slf4j.LoggerFactory
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @Tag(name = "CocktailController")
@@ -27,5 +24,13 @@ class CocktailController(
     ): CommonResponse<Cocktail> {
         val cocktail = cocktailService.getCocktailById(id)
         return CommonResponse.onSuccess(cocktail)
+    }
+
+    @GetMapping("/search")
+    @Operation(summary = "검색 조회 (페이징 X - 10개 까지만)")
+    fun queryCocktail(
+        @RequestParam("query") query: String,
+    ): CommonResponse<List<Cocktail>> {
+        return CommonResponse.onSuccess(cocktailService.queryCocktail(query))
     }
 }

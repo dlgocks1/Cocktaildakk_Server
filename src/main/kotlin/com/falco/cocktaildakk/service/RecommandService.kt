@@ -6,33 +6,23 @@ import com.falco.cocktaildakk.domain.common.CommonErrorCode
 import com.falco.cocktaildakk.domain.user.User
 import com.falco.cocktaildakk.domain.user.UserInfo
 import com.falco.cocktaildakk.exceptions.BaseException
-import com.falco.cocktaildakk.repository.CocktailRepository
 import com.falco.cocktaildakk.repository.UserInfoRepository
 import org.springframework.data.repository.findByIdOrNull
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import kotlin.math.abs
 
 @Service
 class RecommandService(
-    private val cocktailRepository: CocktailRepository,
     private val userInfoRepository: UserInfoRepository,
+    private val cacheService: CocktailCacheService
 ) {
-
-    private var cachedCocktails = emptyList<Cocktail>()
-
-    @Scheduled(cron = "0 0 2 * * *")
-    fun updateCachedCocktail() {
-        cachedCocktails = cocktailRepository.findAll()
-    }
 
     /** 사용자 정보를 이용하여 스코어 정보를 반환한다.
      * @param userInfo 유저 정보
      * @return 점수, 인덱스가 담긴 리스트 */
     fun getDynamicRecommand(user: User): List<Cocktail> {
-        if (cachedCocktails.isEmpty()) updateCachedCocktail()
         val userInfo = userInfoRepository.findByIdOrNull(user.id) ?: throw BaseException(CommonErrorCode.NOT_EXIST_USER)
-        return cachedCocktails
+        return cacheService.getCocktails()
             .asSequence()
             .sortedBy { cocktail ->
                 var score = COCKTAIL_SCORE_ZERO
@@ -62,7 +52,7 @@ class RecommandService(
     }
 
     fun randomRecommand(limit: Int = 5): List<Cocktail> {
-        return cocktailRepository.findRandomCocktails(limit)
+        return cacheService.getCocktails().shuffled().take(5)
     }
 
     fun keywordRecommand(user: User): KeywordRecommandRes {
@@ -70,9 +60,11 @@ class RecommandService(
         val keyword = userInfo.keyword.split(",").random()
         return KeywordRecommandRes(
             keyword = keyword,
-            contents = cocktailRepository.findTop5ByKeywordsContains(
-                keyword
-            )
+            contents = cacheService.getCocktails()
+                .asSequence()
+                .filter {
+                    it.keywords.contains(keyword)
+                }.take(5).toList()
         )
     }
 
@@ -81,7 +73,11 @@ class RecommandService(
         val keyword = userInfo.base.split(",").random()
         return KeywordRecommandRes(
             keyword = keyword,
-            contents = cocktailRepository.findTop5ByBaseLiquorContaining(keyword)
+            contents = cacheService.getCocktails()
+                .asSequence()
+                .filter {
+                    it.baseLiquor.contains(keyword)
+                }.take(5).toList()
         )
     }
 
