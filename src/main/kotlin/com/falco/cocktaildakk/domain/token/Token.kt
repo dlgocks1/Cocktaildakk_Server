@@ -1,8 +1,7 @@
 package com.falco.cocktaildakk.domain.token
 
-import org.springframework.data.annotation.Id
-import org.springframework.data.redis.core.RedisHash
-import org.springframework.data.redis.core.TimeToLive
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
 
 interface Token {
     val userId: String
@@ -10,22 +9,18 @@ interface Token {
     val expiration: Long
 }
 
-/** Redis내부에 access_token:userId 형식으로 저장 */
-@RedisHash(value = "access_token", timeToLive = 1_000)
+@Entity(name = "access_token")
 data class AccessToken(
     @Id
-    override val userId: String,
+    override var userId: String,
     override val token: String,
-    @TimeToLive
     override val expiration: Long,
 ) : Token
 
-
-@RedisHash(value = "refresh_token", timeToLive = 100_000)
+@Entity(name = "refresh_token")
 data class RefreshToken(
     @Id
     override val userId: String,
     override val token: String,
-    @TimeToLive
     override val expiration: Long,
 ) : Token
