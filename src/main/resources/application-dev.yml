@@ -7,12 +7,9 @@ spring:
       platform: mysql
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${JDBC_URL}
-    #    url: ${jdbc.url}
-    username: ${JDBC_DB_USERNAME}
-    #    username: ${jdbc.db.username}
-    password: ${JDBC_DB_PASSWORD}
-    #    password: ${jdbc.db.password}
+    url: ${jdbc.url}
+    username: ${jdbc.db.username}
+    password: ${jdbc.db.password}
   jpa:
     hibernate:
       ddl-auto: create
