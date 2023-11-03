@@ -2,10 +2,13 @@ package com.falco.cocktaildakk.controller
 
 import com.falco.cocktaildakk.domain.cocktail.Cocktail
 import com.falco.cocktaildakk.domain.common.CommonResponse
+import com.falco.cocktaildakk.domain.common.PageResponse
+import com.falco.cocktaildakk.domain.user.User
 import com.falco.cocktaildakk.service.CocktailService
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.slf4j.LoggerFactory
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -15,15 +18,31 @@ class CocktailController(
     private val cocktailService: CocktailService
 ) {
 
-    private val logger = LoggerFactory.getLogger(CocktailController::class.java)
+    @GetMapping("/page")
+    fun getAllPaging(
+        @Parameter(example = "0") @RequestParam("page") page: Int,
+        @Parameter(example = "10") @RequestParam("size") size: Int,
+    ): CommonResponse<PageResponse<Cocktail>> {
+        return CommonResponse.onSuccess(
+            cocktailService.getAllPage(page, size)
+        )
+    }
+
+    @GetMapping("/page/recommand")
+    fun getRecommandPaging(
+        @AuthenticationPrincipal user: User,
+        @Parameter(example = "0") @RequestParam("page") page: Int,
+        @Parameter(example = "10") @RequestParam("size") size: Int,
+    ): CommonResponse<PageResponse<Cocktail>> {
+        return CommonResponse.onSuccess(cocktailService.getRecommandPage(user, page, size))
+    }
 
     @GetMapping("/{id}")
     @Operation(summary = "칵테일 디테일 정보 조회")
     fun getCocktailById(
         @PathVariable("id") id: Long,
     ): CommonResponse<Cocktail> {
-        val cocktail = cocktailService.getCocktailById(id)
-        return CommonResponse.onSuccess(cocktail)
+        return CommonResponse.onSuccess(cocktailService.getCocktailById(id))
     }
 
     @GetMapping("/search")

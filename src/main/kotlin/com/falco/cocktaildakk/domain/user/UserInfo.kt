@@ -12,7 +12,9 @@ data class UserInfo(
     val id: String,
     @Column(name = "alcohol_level")
     var alcoholLevel: Int = DEFAULT_LEVEL,
+    /** ex) 간단한,복잡한 */
     var keyword: String = "",
+    /** ex) 리큐어,보드카 */
     var base: String = "",
     @Column(name = "weight_level")
     val weightLevel: Int = 2,
@@ -21,6 +23,11 @@ data class UserInfo(
     @Column(name = "weight_keyword")
     val weightKeyword: Int = 2,
 ) {
+
+    val baseList: List<String>
+        get() = base.split(".")
+    val keywordList: List<String>
+        get() = keyword.split(".")
 
     companion object {
 
