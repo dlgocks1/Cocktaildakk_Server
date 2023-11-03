@@ -1,23 +1,22 @@
 package com.falco.cocktaildakk.config
 
+import com.falco.cocktaildakk.config.properties.JasyptProperty
 import org.jasypt.encryption.StringEncryptor
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor
 import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 
 @Configuration
 class JasyptConfig(
-    @Value("\${jasypt.encryptor.password}")
-    val jasyptPassword: String
+    private val jasyptProperty: JasyptProperty
 ) {
     @Bean("jasyptStringEncryptor")
     fun stringEncryptor(): StringEncryptor {
         val encryptor = PooledPBEStringEncryptor()
         val config = SimpleStringPBEConfig()
-        config.setPassword(jasyptPassword)
+        config.setPassword(jasyptProperty.jasyptPassword)
         config.algorithm = "PBEWithMD5AndDES"
         config.setKeyObtentionIterations("1000")
         config.setPoolSize("1")
