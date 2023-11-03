@@ -22,5 +22,9 @@ data class Cocktail(
     val ingredients: String,
     /** ex) 간단한, 복잡한 */
     val keywords: String,
-    val description: String
+    val description: String,
+    @Column(name = "img_url")
+    val imgUrl: String = "",
+    @Column(name = "list_url")
+    val listImgUrl: String = "",
 )
