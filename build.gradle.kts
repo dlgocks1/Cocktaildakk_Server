@@ -29,6 +29,12 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2")
 
+    /** Jasypt */
+    implementation("com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5")
+
+    /** aws-s3 */
+    implementation("org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE")
+
     /** Caching */
     implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("com.github.ben-manes.caffeine:caffeine")
