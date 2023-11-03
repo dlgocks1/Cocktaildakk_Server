@@ -56,10 +56,6 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt-impl:0.11.2")
     implementation("io.jsonwebtoken:jjwt-jackson:0.11.2")
 
-    /** Excel */
-    implementation("org.apache.poi:poi:5.0.0")
-    implementation("org.apache.poi:poi-ooxml:5.0.0")
-
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
     runtimeOnly("mysql:mysql-connector-java")

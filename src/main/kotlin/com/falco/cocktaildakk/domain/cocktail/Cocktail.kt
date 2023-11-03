@@ -5,8 +5,8 @@ import jakarta.persistence.*
 @Entity(name = "cocktail")
 data class Cocktail(
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long = 0L,
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    val id: Long = 0L,
     @Column(name = "english_name")
     val englishName: String,
     @Column(name = "korean_name")
