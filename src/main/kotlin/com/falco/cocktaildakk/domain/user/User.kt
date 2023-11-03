@@ -17,9 +17,11 @@ data class User(
     var gender: Gender = Gender.UNKNOWN,
     var age: Int = -1,
     var nickname: String = "익명",
+    @Enumerated(EnumType.STRING)
+    val role: UserRole = UserRole.ROLE_USER,
 ) : UserDetails {
     override fun getAuthorities(): Collection<GrantedAuthority> {
-        return listOf(SimpleGrantedAuthority("USER"))
+        return role.value.split(",").map { SimpleGrantedAuthority(it) }
     }
 
     override fun getPassword(): String = "password"

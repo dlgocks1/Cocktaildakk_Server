@@ -39,8 +39,8 @@ class AdminController(
         @Parameter(description = "테스트 유저아이디", example = "1234")
         @PathVariable("userId") userId: String
     ): CommonResponse<AccessTokenAndRefreshToken> {
-        authService.register(userId, LoginType.KAKAO)
-        return CommonResponse.onSuccess(jwtService.generateTokenByUserId(userId))
+        authService.register(userId, LoginType.KAKAO) // Register User
+        return CommonResponse.onSuccess(jwtService.generateTokenByUserId(userId)) // Register Token
     }
 }
 
