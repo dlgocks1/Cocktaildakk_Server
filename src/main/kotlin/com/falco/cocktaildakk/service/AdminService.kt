@@ -4,7 +4,7 @@ import com.amazonaws.services.s3.AmazonS3
 import com.amazonaws.services.s3.model.CannedAccessControlList
 import com.amazonaws.services.s3.model.ObjectMetadata
 import com.amazonaws.services.s3.model.PutObjectRequest
-import com.falco.cocktaildakk.controller.UploadCocktail
+import com.falco.cocktaildakk.controller.UploadCocktailReq
 import com.falco.cocktaildakk.domain.cocktail.Cocktail
 import com.falco.cocktaildakk.domain.cocktail.CocktailImageType
 import com.falco.cocktaildakk.repository.CocktailRepository
@@ -20,19 +20,19 @@ class AdminService(
 
     val bucket = "cocktaildakk-s3"
     fun uploadCocktail(
-        uploadCocktail: UploadCocktail
+        uploadCocktailReq: UploadCocktailReq
     ): Cocktail {
-        val imageUrl = uploadImage(uploadCocktail.image, CocktailImageType.IMAGE)
-        val listImageUrl = uploadImage(uploadCocktail.listImage, CocktailImageType.LIST)
+        val imageUrl = uploadImage(uploadCocktailReq.image, CocktailImageType.IMAGE)
+        val listImageUrl = uploadImage(uploadCocktailReq.listImage, CocktailImageType.LIST)
         return cocktailRepository.save(
-            uploadCocktail.convertToCocktail(
+            uploadCocktailReq.convertToCocktail(
                 iamgeUrl = imageUrl,
                 listImageUrl = listImageUrl
             )
         )
     }
 
-    fun uploadImage(image: MultipartFile, type: CocktailImageType): String {
+    private fun uploadImage(image: MultipartFile, type: CocktailImageType): String {
         val bytes = image.bytes
         val objectKey = type.directory + "/" + image.originalFilename // S3에 저장할 경로와 파일 이름
         val objMeta = ObjectMetadata().apply {

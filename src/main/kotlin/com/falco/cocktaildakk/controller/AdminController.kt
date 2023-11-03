@@ -1,32 +1,35 @@
 package com.falco.cocktaildakk.controller
 
+import com.falco.cocktaildakk.domain.cocktail.Cocktail
 import com.falco.cocktaildakk.domain.common.ApiErrorCodeExample
 import com.falco.cocktaildakk.domain.common.CommonResponse
 import com.falco.cocktaildakk.domain.token.response.AccessTokenAndRefreshToken
 import com.falco.cocktaildakk.domain.user.LoginType
 import com.falco.cocktaildakk.domain.user.UserAuthErrorCode
+import com.falco.cocktaildakk.service.AdminService
 import com.falco.cocktaildakk.service.AuthService
 import com.falco.cocktaildakk.service.JwtService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 
 @RestController
 @Tag(name = "AdminController")
 @RequestMapping("/admin")
 class AdminController(
     private val jwtService: JwtService,
-    private val authService: AuthService
+    private val authService: AuthService,
+    private val adminService: AdminService
 ) {
 
-    @GetMapping
-    @Operation(description = "칵테일 업로드")
-    fun updateCocktail(): String {
-        return "준비 중"
+    @Operation(summary = "칵테일 업로드")
+    @RequestMapping(value = ["/upload"], consumes = ["multipart/form-data"], method = [RequestMethod.POST])
+    fun uploadCocktail(
+        @ModelAttribute uploadCocktailReq: UploadCocktailReq,
+    ): CommonResponse<Cocktail> {
+        return CommonResponse.onSuccess(adminService.uploadCocktail(uploadCocktailReq))
     }
 
     @GetMapping("/test-register/{userId}")
@@ -38,5 +41,33 @@ class AdminController(
     ): CommonResponse<AccessTokenAndRefreshToken> {
         authService.register(userId, LoginType.KAKAO)
         return CommonResponse.onSuccess(jwtService.generateTokenByUserId(userId))
+    }
+}
+
+data class UploadCocktailReq(
+    val englishName: String,
+    val koreanName: String,
+    val alcoholLevel: Int,
+    val baseLiquor: String,
+    val mixingMethod: String,
+    val ingredients: String,
+    val keywords: String,
+    val description: String,
+    val image: MultipartFile,
+    val listImage: MultipartFile,
+) {
+    fun convertToCocktail(iamgeUrl: String, listImageUrl: String): Cocktail {
+        return Cocktail(
+            englishName = this.englishName,
+            koreanName = this.koreanName,
+            alcoholLevel = this.alcoholLevel,
+            baseLiquor = this.baseLiquor,
+            mixingMethod = this.mixingMethod,
+            ingredients = this.ingredients,
+            keywords = this.keywords,
+            description = this.description,
+            imgUrl = iamgeUrl,
+            listImgUrl = listImageUrl
+        )
     }
 }
