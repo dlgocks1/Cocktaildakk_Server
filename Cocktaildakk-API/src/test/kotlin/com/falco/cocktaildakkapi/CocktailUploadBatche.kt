@@ -1,7 +1,7 @@
 package com.falco.cocktaildakkapi
 
-import com.falco.cocktaildakkapi.domain.cocktail.dto.Cocktail
-import com.falco.cocktaildakkapi.domain.cocktail.CocktailRepository
+import com.falco.cocktaildakkdomain.cocktail.model.Cocktail
+import com.falco.cocktaildakkdomain.cocktail.repository.CocktailRepository
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.junit.jupiter.api.Test
@@ -13,14 +13,17 @@ import java.io.File
 @SpringBootTest
 @ActiveProfiles(profiles = ["local"])
 //@ContextConfiguration(locations = ["classpath:WEB-INF/application-common.xml"])
-class CocktailUploadBatches {
+class CocktailUploadBatche {
 
     @Autowired
     private lateinit var cocktailRepository: CocktailRepository
 
-    //        https://cocktaildakk-s3.s3.ap-northeast-2.amazonaws.com/list/21stCentury.webp
-    //        https://cocktaildakk-s3.s3.ap-northeast-2.amazonaws.com/list/AlaskaIcedTea.webp
-    val BASE_S3_URL = "https://cocktaildakk-s3.s3.ap-northeast-2.amazonaws.com"
+    /**
+     * 예시 URL
+     * - https://cocktaildakk-s3.s3.ap-northeast-2.amazonaws.com/list/21stCentury.webp
+     * - https://cocktaildakk-s3.s3.ap-northeast-2.amazonaws.com/list/AlaskaIcedTea.webp
+     */
+    private val BASE_S3_URL = "https://cocktaildakk-s3.s3.ap-northeast-2.amazonaws.com"
 
     @Test
     fun saveDumpData() {

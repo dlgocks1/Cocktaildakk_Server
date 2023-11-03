@@ -1,8 +1,7 @@
 package com.falco.cocktaildakkapi
 
-import com.falco.cocktaildakkapi.domain.token.model.AccessToken
-import com.falco.cocktaildakkapi.domain.token.AccessTokenRepository
-import com.falco.cocktaildakkapi.domain.token.RefreshTokenRepository
+import com.falco.cocktaildakkdomain.token.model.AccessToken
+import com.falco.cocktaildakkdomain.token.repository.AccessTokenRepository
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.security.Keys
@@ -18,9 +17,6 @@ class TokenCrudTest {
 
     @Autowired
     private lateinit var accessTokenRepository: AccessTokenRepository
-
-    @Autowired
-    private lateinit var refreshTokenRepository: RefreshTokenRepository
 
     @Test
     @DisplayName("AccessToken 생성 및 삭제 테스트")

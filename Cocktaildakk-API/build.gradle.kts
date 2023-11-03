@@ -33,11 +33,14 @@ dependencies {
         implementation(JWT_API)
         implementation(JWT_IMPL)
         implementation(JWT_JACKSON)
+
+        //    /** String Parser */
+        implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+        implementation("com.google.code.gson:gson:2.8.9")
+        implementation("org.json:json:20230618")
+        testImplementation(SPRING_BOOT_STARTER_TEST)
+        testImplementation(SPRING_BOOT_STARTER_SECRURITY_TEST)
     }
-//    /** String Parser */
-//    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-//    implementation("com.google.code.gson:gson:2.8.9")
-//    implementation("org.json:json:20230618")
 }
 
 tasks.withType<KotlinCompile> {

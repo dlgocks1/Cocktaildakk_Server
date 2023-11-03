@@ -1,11 +1,13 @@
 package com.falco.cocktaildakkdomain.cocktail.model
 
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
 
 @Entity(name = "cocktail")
 data class Cocktail(
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+//    @GeneratedValue(strategy = GenerationType.AUTO)
     val id: Long = 0L,
     @Column(name = "english_name")
     val englishName: String,
