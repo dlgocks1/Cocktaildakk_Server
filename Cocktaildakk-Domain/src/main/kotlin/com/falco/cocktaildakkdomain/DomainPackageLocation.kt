@@ -1,0 +1,3 @@
+package com.falco.cocktaildakkdomain
+
+interface DomainPackageLocation
