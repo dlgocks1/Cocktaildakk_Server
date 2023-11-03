@@ -17,6 +17,7 @@ import io.jsonwebtoken.security.SecurityException
 import jakarta.servlet.ServletRequest
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
@@ -119,6 +120,15 @@ class JwtService(
     private fun getExpirationAndSecret(tokenType: TokenType) = when (tokenType) {
         TokenType.ACCESS -> jwtProperty.accesstoken.expiration to jwtProperty.accesstoken.secret
         TokenType.REFRESH -> jwtProperty.refreshtoken.expiration to jwtProperty.refreshtoken.secret
+    }
+
+    @Scheduled(cron = "0 0 2 * * *")
+    fun reloadAccessToken() {
+        accessTokenRepository.deleteAllById(
+            accessTokenRepository.findAll()
+                .filter { Date(it.expiration).before(Date()) }
+                .map { it.userId }
+        )
     }
 
 
