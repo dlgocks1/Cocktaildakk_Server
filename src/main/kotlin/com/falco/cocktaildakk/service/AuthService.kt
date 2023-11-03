@@ -45,9 +45,8 @@ class AuthService(
         userRepository.save(User(id = userId, loginType = loginType))
     }
 
-    fun checkUserPreference(token: String): Boolean {
-        val userId = jwtService.getUserIdFromToken(token, TokenType.ACCESS)
-        return userInfoRepository.findByIdOrNull(userId) != null
+    fun checkUserPreference(user: User): Boolean {
+        return userInfoRepository.findByIdOrNull(user.id) != null
     }
 
     fun setUserPreference(user: User, userInfoReq: UserInfoReq): UserInfo {

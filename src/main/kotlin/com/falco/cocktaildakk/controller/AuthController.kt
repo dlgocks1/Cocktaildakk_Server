@@ -6,7 +6,6 @@ import com.falco.cocktaildakk.domain.token.request.TokenRequest
 import com.falco.cocktaildakk.domain.token.response.AccessTokenAndRefreshToken
 import com.falco.cocktaildakk.domain.user.UserAuthErrorCode
 import com.falco.cocktaildakk.service.AuthService
-import com.falco.cocktaildakk.service.JwtService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController
 @Tag(name = "AuthController")
 @RequestMapping("/auth")
 class AuthController(
-    private val jwtService: JwtService,
     private val authService: AuthService,
 ) {
 

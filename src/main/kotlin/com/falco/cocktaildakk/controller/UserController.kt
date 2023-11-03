@@ -1,7 +1,6 @@
 package com.falco.cocktaildakk.controller
 
 import com.falco.cocktaildakk.domain.common.CommonResponse
-import com.falco.cocktaildakk.domain.token.request.TokenRequest
 import com.falco.cocktaildakk.domain.user.User
 import com.falco.cocktaildakk.domain.user.UserInfo
 import com.falco.cocktaildakk.service.AuthService
@@ -18,13 +17,10 @@ import org.springframework.web.bind.annotation.*
 class UserController(
     private val authService: AuthService
 ) {
-    @PostMapping("/check-preference")
-    @Operation(summary = "회원가입/로그인시 유저 정보를 입력했는지 확인합니다. false면 유저정보 입력필요")
-    fun checkUserPreference(
-        @Parameter(name = "엑세스 토큰을 의미합니다.")
-        @RequestBody accessToken: TokenRequest
-    ): CommonResponse<Boolean> {
-        return CommonResponse.onSuccess(authService.checkUserPreference(accessToken.token))
+    @GetMapping("/check-preference")
+    @Operation(summary = "회원가입/로그인시 유저 정보를 입력했는지 확인합니다. -> false면 유저정보 입력필요")
+    fun checkUserPreference(@AuthenticationPrincipal user: User): CommonResponse<Boolean> {
+        return CommonResponse.onSuccess(authService.checkUserPreference(user))
     }
 
     @PostMapping("/preference")
