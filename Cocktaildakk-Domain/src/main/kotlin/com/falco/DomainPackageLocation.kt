@@ -1,0 +1,3 @@
+package com.falco
+
+interface DomainPackageLocation
