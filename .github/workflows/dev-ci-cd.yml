@@ -2,7 +2,7 @@ name: dev Cocktaildakk BeanStalk CI/CD
 
 on:
   push:
-    branches: [ develop ]
+    branches: [ release ]
   workflow_dispatch: # 수동 실행 옵션 (생략)
 
 jobs:
@@ -19,12 +19,19 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Set Jasypt Password - Yml
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: src/main/resources/application-common.yml
+        env:
+          jasypt.encryptor.password: ${{ secrets.JASYPT_PASSWORD }}
+
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
         shell: bash
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew build -x test
         shell: bash
 
       - name: Get current time

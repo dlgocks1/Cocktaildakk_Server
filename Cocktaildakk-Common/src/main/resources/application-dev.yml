@@ -1,0 +1,27 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+  sql:
+    init:
+      platform: mysql
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ENC(JT4FvSeIb/+FinKu5uUwOercA4SCXHBaY+GPU/Rvc+BiVufrs92IzvyFP6BN7R4dRyPogHsmYgzr79jEiUpFVMwVR2hLN9dX9AsYNzHm8yXbpxdpJnaJb6l1RqRsYUqPuBnLw4eznaaeuKYxUIiZqw==)
+    username: ENC(BRskzOqGL02cgQUJO5mx4A==)
+    password: ENC(msu6yFfOUrDYhxA117PjOIPp6K5wwUR4)
+  jpa:
+    hibernate:
+      ddl-auto: create
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    generate-ddl: false
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 1000
+
+
+

@@ -1,0 +1,19 @@
+jwt:
+  header: X-AUTH-TOKEN
+  accesstoken:
+    secret: ENC(pWVqaFCq6jVN1wigjZTymOhEJJTppDOXr+zOaLH7Jys/XFle9mCzgLL1ceXL4oBLQU+bmOV08tF+qOIXQVqTfeXWBzXQ0X+Hfba/zdGMXK5g/+2q/wUh44OE7NOiQ6cbvY615SxF3bk=)
+    expiration: ENC(n6I9V4EyAnD9GgmrDXxIzCWkDsZUm7r0)
+  refreshtoken:
+    secret: ENC(AeaQnmepXjwLER3/1SpStAPoo3UflREWzbIwFvDdaTL+OipCtIxehagDeBNuqzj1ZNx6FAqJ7VIA6Nqyw27tYYkx8V+wvMn16KED3cWmWSZ9yGPMz4isrCKfPsUSg1S1B1AYhzPlXiU=)
+    expiration: ENC(n6I9V4EyAnD9GgmrDXxIzCWkDsZUm7r0)
+
+aws:
+  credentials:
+    accessKey: ENC(u1VURm6Rjjzkd7/9OUECIClFqPSC5LJoQ0XcdaZSJFA=)
+    secretKey: ENC(Iv7ElZhK0zIUmMyI9Mh8p4ggMWSD9R3SSnWesxCjfi+dSTMGGDkI7Qw8rTU4RLnunhZaJ674K1M=)
+  region:
+    static: ap-northeast-2
+
+jasypt:
+  encryptor:
+    password: ${jasypt.password}
