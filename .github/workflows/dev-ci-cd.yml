@@ -22,7 +22,7 @@ jobs:
       - name: Set Jasypt Password - Yml
         uses: microsoft/variable-substitution@v1
         with:
-          files: src/main/resources/application-common.yml
+          files: ./Cocktaildakk-Common/src/main/resources/application-common.yml
         env:
           jasypt.encryptor.password: ${{ secrets.JASYPT_PASSWORD }}
 
@@ -45,7 +45,7 @@ jobs:
       - name: Generate deployment package
         run: |
           mkdir -p deploy
-          cp build/libs/*.jar deploy/cocktaildakk-dev.jar
+          cp Cocktaildakk-API/build/libs/*.jar deploy/cocktaildakk-dev.jar
           cp Procfile deploy/Procfile
           cp -r .ebextensions-dev deploy/.ebextensions
           cp -r .platform deploy/.platform
