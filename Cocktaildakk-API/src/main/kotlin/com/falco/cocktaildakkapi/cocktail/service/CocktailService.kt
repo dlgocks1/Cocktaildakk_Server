@@ -56,4 +56,9 @@ class CocktailService(
             contents = content
         )
     }
+
+    fun reloadCocktail(): String {
+        cacheService.reloadCocktails()
+        return "캐시 리로드 성공"
+    }
 }
