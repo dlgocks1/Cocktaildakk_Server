@@ -52,4 +52,10 @@ class CocktailController(
     ): CommonResponse<List<Cocktail>> {
         return CommonResponse.onSuccess(cocktailService.queryCocktail(query))
     }
+
+    @GetMapping("/cache-reload")
+    @Operation(summary = "칵테일 캐시 수동 리로드)")
+    fun reloadCocktail(): CommonResponse<String> {
+        return CommonResponse.onSuccess(cocktailService.reloadCocktail())
+    }
 }

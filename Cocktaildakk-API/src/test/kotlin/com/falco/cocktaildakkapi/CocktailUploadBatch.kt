@@ -11,9 +11,9 @@ import org.springframework.test.context.ActiveProfiles
 import java.io.File
 
 @SpringBootTest
-@ActiveProfiles(profiles = ["local"])
+@ActiveProfiles(profiles = ["dev"])
 //@ContextConfiguration(locations = ["classpath:WEB-INF/application-common.xml"])
-class CocktailUploadBatche {
+class CocktailUploadBatch {
 
     @Autowired
     private lateinit var cocktailRepository: CocktailRepository
