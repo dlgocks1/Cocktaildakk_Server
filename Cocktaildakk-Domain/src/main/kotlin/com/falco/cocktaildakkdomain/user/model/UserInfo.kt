@@ -25,9 +25,9 @@ data class UserInfo(
 ) {
 
     val baseList: List<String>
-        get() = base.split(".")
+        get() = base.split(",")
     val keywordList: List<String>
-        get() = keyword.split(".")
+        get() = keyword.split(",")
 
     companion object {
 
