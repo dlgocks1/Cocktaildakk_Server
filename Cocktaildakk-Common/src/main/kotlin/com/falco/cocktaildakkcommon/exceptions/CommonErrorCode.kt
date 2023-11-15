@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus
 enum class CommonErrorCode(
     val httpStatus: HttpStatus,
     val code: String,
-    val message: String
+    val message: String,
 ) : BaseErrorCode {
 
     /**
@@ -71,6 +71,7 @@ enum class CommonErrorCode(
     override val errorReason = ErrorReason(
         httpStatus = httpStatus,
         code = code,
-        message = message
+        message = message,
+//        result = result
     )
 }

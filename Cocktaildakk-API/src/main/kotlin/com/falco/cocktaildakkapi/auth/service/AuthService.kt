@@ -36,7 +36,7 @@ class AuthService(
     }
 
     fun refresh(refreshToken: String): AccessTokenAndRefreshToken {
-        val userId = jwtService.getUserIdFromToken(refreshToken, TokenType.ACCESS)
+        val userId = jwtService.getUserIdFromToken(refreshToken, TokenType.REFRESH)
         return jwtService.generateTokenByUserId(userId)
     }
 

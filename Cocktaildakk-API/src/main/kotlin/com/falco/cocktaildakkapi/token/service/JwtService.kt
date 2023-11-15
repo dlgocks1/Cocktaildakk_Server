@@ -89,13 +89,21 @@ class JwtService(
     fun getUserIdFromToken(token: String, tokenType: TokenType): String {
         val (_, secret) = getExpirationAndSecret(tokenType)
         validateToken(token, tokenType)
-        return Jwts.parserBuilder().setSigningKey(secret.toByteArray()).build()
-            .parseClaimsJws(token).body.subject
+        return try {
+            Jwts.parserBuilder().setSigningKey(secret.toByteArray()).build()
+                .parseClaimsJws(token).body.subject
+        } catch (e: Exception) {
+            throw BaseException(CommonErrorCode.INVALID_TOKEN_EXCEPTION)
+        }
     }
 
     fun getAuthentication(token: String?): Authentication {
-        val userId = Jwts.parserBuilder().setSigningKey(jwtProperty.accesstoken.secret.toByteArray()).build()
-            .parseClaimsJws(token).body.subject
+        val userId = try {
+            Jwts.parserBuilder().setSigningKey(jwtProperty.accesstoken.secret.toByteArray()).build()
+                .parseClaimsJws(token).body.subject
+        } catch (e: Exception) {
+            throw BaseException(CommonErrorCode.INVALID_TOKEN_EXCEPTION)
+        }
         val users = userRepository.findByIdOrNull(userId)
         return UsernamePasswordAuthenticationToken(users, "", listOf(GrantedAuthority { "ROLE_USER" }))
     }
@@ -106,16 +114,22 @@ class JwtService(
         if (expiration.before(Date())) throw BaseException(CommonErrorCode.EXPIRED_JWT_EXCEPTION)
     }
 
-    private fun getExpirationFromToken(token: String, tokenType: TokenType): Date? =
-        when (tokenType) {
-            TokenType.ACCESS ->
-                Jwts.parserBuilder().setSigningKey(jwtProperty.accesstoken.secret.toByteArray()).build()
-                    .parseClaimsJws(token).body.expiration
+    private fun getExpirationFromToken(token: String, tokenType: TokenType): Date? {
+        return try {
+            when (tokenType) {
+                TokenType.ACCESS ->
+                    Jwts.parserBuilder().setSigningKey(jwtProperty.accesstoken.secret.toByteArray()).build()
+                        .parseClaimsJws(token).body.expiration
 
-            TokenType.REFRESH ->
-                Jwts.parserBuilder().setSigningKey(jwtProperty.refreshtoken.secret.toByteArray()).build()
-                    .parseClaimsJws(token).body.expiration
+                TokenType.REFRESH ->
+                    Jwts.parserBuilder().setSigningKey(jwtProperty.refreshtoken.secret.toByteArray()).build()
+                        .parseClaimsJws(token).body.expiration
+            }
+        } catch (e: Exception) {
+            throw BaseException(CommonErrorCode.INVALID_TOKEN_EXCEPTION)
         }
+    }
+
 
     private fun getExpirationAndSecret(tokenType: TokenType) = when (tokenType) {
         TokenType.ACCESS -> jwtProperty.accesstoken.expiration to jwtProperty.accesstoken.secret

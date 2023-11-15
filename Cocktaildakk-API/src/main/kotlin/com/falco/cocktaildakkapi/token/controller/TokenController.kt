@@ -29,7 +29,7 @@ class TokenController(
     }
 
     @PostMapping("/refresh")
-    @Operation(summary = "토큰 리프레쉬")
+    @Operation(summary = "토큰 리프레쉬(리프레쉬 토큰)")
     @ApiErrorCodeExample(UserAuthErrorCode::class)
     fun refresh(
         @RequestBody refreshToken: TokenRequest
