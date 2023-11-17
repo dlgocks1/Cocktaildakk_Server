@@ -1,7 +1,7 @@
 package com.falco.cocktaildakkapi.map.service
 
 import com.falco.cocktaildakkapi.map.dto.KakaoSearchResDto
-import com.falco.cocktaildakkapi.map.dto.MapSearchInfo
+import com.falco.cocktaildakkapi.map.dto.MapSearchResDto
 import com.falco.cocktaildakkcommon.config.properties.KakaoProperty
 import com.falco.cocktaildakkcommon.exceptions.CommonErrorCode
 import com.falco.cocktaildakkcommon.exceptions.model.BaseException
@@ -15,7 +15,7 @@ class MapService(
     private val kakaoProperty: KakaoProperty
 ) {
     private val webClient: WebClient = WebClient.builder().build()
-    fun getStoreByLocation(x: Double, y: Double, radius: Double): PageResponse<MapSearchInfo> {
+    fun getStoreByLocation(x: Double, y: Double, radius: Double): PageResponse<MapSearchResDto> {
         return try {
             val response: Flux<KakaoSearchResDto> = webClient.get()
                 .uri("https://dapi.kakao.com/v2/local/search/keyword.json?query=칵테일&x=${x}&y=${y}&radius=${radius}")

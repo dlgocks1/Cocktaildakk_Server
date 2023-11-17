@@ -1,6 +1,6 @@
 package com.falco.cocktaildakkapi.map.controller
 
-import com.falco.cocktaildakkapi.map.dto.MapSearchInfo
+import com.falco.cocktaildakkapi.map.dto.MapSearchResDto
 import com.falco.cocktaildakkapi.map.service.MapService
 import com.falco.cocktaildakkcommon.model.PageResponse
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -21,7 +21,7 @@ class MapController(
         @RequestParam("x") x: Double,
         @RequestParam("y") y: Double,
         @RequestParam("radius") radius: Double,
-    ): PageResponse<MapSearchInfo> {
+    ): PageResponse<MapSearchResDto> {
         return mapService.getStoreByLocation(x, y, radius)
     }
 
