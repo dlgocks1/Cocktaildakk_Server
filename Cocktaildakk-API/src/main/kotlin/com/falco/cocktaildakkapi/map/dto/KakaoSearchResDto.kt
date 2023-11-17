@@ -11,7 +11,7 @@ data class KakaoSearchResDto(
 ) {
     fun toPagingResponse(): PageResponse<MapSearchResDto> {
         return PageResponse(
-            contents = mapSearchInfos.map { it.toResDto() },
+            contents = mapSearchInfos.map(MapSearchInfo::toResDto),
             totalCnt = mapSearchMetadata.totalCount.toLong(),
             isLast = mapSearchMetadata.isEnd
         )
